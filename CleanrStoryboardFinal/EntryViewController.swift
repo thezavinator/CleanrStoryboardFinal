@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseFirestore
+
 class EntryViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet var field: UITextField!
@@ -26,7 +29,32 @@ class EntryViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    @objc func saveTask() {//Setting this to @objc allows the function to be used as a #selector
+    func saveTask() {
+        guard canSave else {//Verify that saving is possible, and if not, quit this function.
+            return
+        }
+        
+        //Get current user ID. If not possible, quit this function.
+        guard let uID = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        //Create model
+        
+        
+        //Save model
+        let db = Firestore.firestore()
+        db.Collection("users")
+            .document(uid)
+            .collection("todos")
+            .document("123")
+            .setData([:])
+    }//End of saveTask()
+    
+        //Old saveTask() function
+        /*
+         //@objc func saveTask() {//Setting this to @objc allows the function to be used as a #selector
+
         guard let text = field.text, !text.isEmpty else {//Assign the text as long as it isn't empty
             return
         }
@@ -44,6 +72,5 @@ class EntryViewController: UIViewController, UITextFieldDelegate {
         update?()
         
         navigationController?.popViewController(animated: true)
-    }
-    
+    }//End of saveTask()*/
 }//End of EntryViewController class
