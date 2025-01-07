@@ -9,25 +9,6 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    //@EnvironmentObject var taskList: ViewControllerModel
-    
-    
-    let taskList: TaskList
-    
-    init?(taskList: TaskList, coder: NSCoder) {
-        self.taskList = taskList
-        super.init(coder: coder)
-    }
-    
-    required init?(coder: NSCoder) {
-        //super.init(coder: coder)
-        fatalError("init(coder:) has not been implemented.")
-    }
-    
-    /*required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented.")
-    }*/
-    
     @IBOutlet var tableView: UITableView!//This lets us control the tableview from the storyboard
     var tasks = [String]()
     
@@ -37,16 +18,12 @@ class ViewController: UIViewController {
         
         
         //Initialize a StateObject, to create the original TaskList
-        @StateObject var taskList = TaskList()
+        //@StateObject var taskList = TaskList() //TODO: Removed this line to remove error from old attempt.
         
         tableView.delegate = self
         tableView.dataSource = self
         
-        //Setup
-        if !UserDefaults().bool(forKey: "setup") {
-            UserDefaults().set(true, forKey: "setup")
-            UserDefaults().set(0, forKey: "count")//Sets the number of tasks to 0
-        }
+        
         
         // Get all current saved Tasks.
         updateTasks()
@@ -56,25 +33,15 @@ class ViewController: UIViewController {
         //Start fresh with an empty array
         tasks.removeAll()
         
-        guard let count = UserDefaults().value(forKey: "count") as? Int else {
-            return
-        }
+        //Add the tasks from the database
         
-        //Iterate for every Task item
-        for x in 0..<count {
-            if let task = UserDefaults().value(forKey: "task_\(x+1)") as? String {
-                tasks.append(task)
-            }
-        }
         
+        //Reload the data so the user sees it after the changes
         tableView.reloadData()
     }
     
     @IBAction func didTapAdd() {//This function sends the user to a storyboard to create a new task
         
-        taskList.tasks.append("notDefault")
-        
-        /*
         //Instantiate the EntryViewController
         let vc = storyboard?.instantiateViewController(withIdentifier: "entry") as! EntryViewController
         
@@ -90,12 +57,12 @@ class ViewController: UIViewController {
         
         //Now that the EntryViewController is ready, push the user to its screen
         navigationController?.pushViewController(vc, animated: true)
-        */
     }//End of didTapAdd()
 }//End of ViewController
 
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //Stop selecting the row that was selected
         tableView.deselectRow(at: indexPath, animated: true)
         
         //Instantiate the EntryViewController
@@ -103,8 +70,8 @@ extension ViewController: UITableViewDelegate {
         
         //Add a title to the EntryViewController
         vc.title = "New Task"
-        vc.task = tasks[indexPath.row]
-        vc.indexPath = indexPath
+        //vc.task = tasks[indexPath.row]
+        //vc.indexPath = indexPath
         
         //Now that the EntryViewController is ready, push the user to its screen
         navigationController?.pushViewController(vc, animated: true)
