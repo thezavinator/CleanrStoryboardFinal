@@ -6,41 +6,41 @@
 //
 
 import UIKit
-import Firebase
-import FirebaseAuth
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var usernameField: UITextField!
-    @IBOutlet weak var passwordField: UITextField!
-    
-    @IBAction func tappedLoginButton(_ sender: Any) {
-    }
-    
-    //@IBOutlet var tableView: UITableView!//This connects the storyboard to this file and makes it accessible in this file as tableView
-    
+    @IBOutlet var tableView: UITableView!//This lets us control the tableview from the storyboard
+    var tasks = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        /*
-        //self.title = "Home"
-        //usernameField.delegate = self
-        //passwordField.delegate = self
+        self.title = "Home"
         
         
         //Initialize a StateObject, to create the original TaskList
         //@StateObject var taskList = TaskList() //TODO: Removed this line to remove error from old attempt.
         
-        //tableView.delegate = self
-        //tableView.dataSource = self
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        
         
         // Get all current saved Tasks.
-        //updateTasks() */
+        updateTasks()
     }
     
-    /*
-    @IBAction func didTapAdd() {//This function sends the user to a storyboard to create a new task when they tap the + button at the top right.
+    func updateTasks() {
+        //Start fresh with an empty array
+        tasks.removeAll()
+        
+        //Add the tasks from the database
+        
+        
+        //Reload the data so the user sees it after the changes
+        tableView.reloadData()
+    }
+    
+    @IBAction func didTapAdd() {//This function sends the user to a storyboard to create a new task
         
         //Instantiate the EntryViewController
         let vc = storyboard?.instantiateViewController(withIdentifier: "entry") as! EntryViewController
@@ -57,37 +57,9 @@ class ViewController: UIViewController {
         
         //Now that the EntryViewController is ready, push the user to its screen
         navigationController?.pushViewController(vc, animated: true)
-    }//End of didTapAdd()*/
-    
-    func register() {
-        guard let username = usernameField.text else {
-            return
-        }
-        guard let password = passwordField.text else {
-            return
-        }
-        Auth.auth().createUser(withEmail: username, password: password) { result, error in
-            if error != nil {
-                print(error!.localizedDescription)
-            }
-        }
-    }//End of register()
-    
-    func login() {
-        guard let username = usernameField.text else {
-            return
-        }
-        guard let password = passwordField.text else {
-            return
-        }
-        Auth.auth().signIn(withEmail: username, password: password) { result, error in if error != nil {
-                print(error!.localizedDescription)
-            }
-        }
-    }//End of login()
+    }//End of didTapAdd()
 }//End of ViewController
 
-/*
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //Stop selecting the row that was selected
@@ -105,12 +77,10 @@ extension ViewController: UITableViewDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
 }
-*/
 
-/*
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
+        return tasks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -118,8 +88,8 @@ extension ViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         //Set the text label for the cell based on its IndexPath
-                
+        cell.textLabel?.text = tasks[indexPath.row]
+        
         return cell
     }
 }
-*/
